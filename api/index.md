@@ -1,2 +1,4 @@
 # API
-![Hasura GraphiQL](../resources/images/hasura_graphiql_landingpage.png)
+## Connexion à l'API
+- [Se connecter avec GraphiQL](progap-docs/api/hasura)
+- [Se connecter avec Postman](progap-docs/api/postman)
