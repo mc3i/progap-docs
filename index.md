@@ -1,2 +1,2 @@
 # Accueil
-- [API](progap-docs/api)
+- [API](/api)
