@@ -2,7 +2,7 @@
 ## Connexion
 Depuis l'application Postman, créer une nouvelle requête.
 
-- Renseigner "POST dans la méthode 
+- Renseigner `POST` dans la méthode 
 - Renseigner le nom de votre API dans l'URL (ex: `https://VOTRE_INSTANCE.mc3i.io/api/v1/graphql`)
 - Renseigner l'entête `x-hasura-admin-secret` en utilisant la valeur transmise par M&C 3i
 
