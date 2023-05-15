@@ -1,4 +1,4 @@
 # API
 ## Connexion à l'API
-- [Se connecter avec GraphiQL](/api/hasura)
-- [Se connecter avec Postman](/api/postman)
+- [Se connecter avec GraphiQL](hasura)
+- [Se connecter avec Postman](postman)
