@@ -1,4 +1,4 @@
-[API](..) / Schéma
+[API](..) / Schéma / Généralités
 
 ## Types 
 Pour faciliter la lecture et la compréhention du schéma de l'API GraphQL PROGAP web, les différents types (Queries, Mutations) sont codifiés selon les patterns suivants.
