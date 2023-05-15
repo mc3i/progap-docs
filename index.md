@@ -1,2 +1,2 @@
 # Accueil
-- [API](/api)
+- [API](api)
