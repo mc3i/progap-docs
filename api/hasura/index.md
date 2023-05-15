@@ -1,4 +1,4 @@
-# Connexion à l'API via GraphiQL
+# [API](..) / Connexion à l'API via GraphiQL
 ## Connexion
 Depuis votre navigateur, se rendre sur [ici](https://cloud.hasura.io/public/graphiql).
 
