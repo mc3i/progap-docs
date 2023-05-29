@@ -1,17 +1,17 @@
-[API](..) / Schéma / Liste complète des types
+[API](..) / Schéma / Référence
 
 ## Sommaire
-- Gestion des licences
+- Gestion des licences (*en cours d'écriture*)
   - [Aperçu](#aperçu)
   - [Utilisateurs](#utilisateurs)
   - [Modèles de licences](#modèles-de-licence)
   - [Licences](#licenses)
-  - [Synchronisation]()
-- Gestion des utilisateurs
+  - [Synchronisation](#synchronisation)
+- Gestion des utilisateurs (*en cours d'écriture*)
   - [Utilisateurs](#utilisateurs-1)
   - [Rôles](#rôles)
   - [Affectation](#affectation)
-- Gestion des affaires
+- Gestion des affaires (*en cours d'écriture*)
   - [Espaces de travail](#espaces-de-travail)
   - [Droits d'accès aux espaces de travail](#droits-daccès-aux-espaces-de-travail)
   - [Affaires](#affaires)
@@ -61,8 +61,9 @@ Le type `mdb_helios_license` correspond à une licence PROGAP.
 | user_id       | uuid, not null                | Identifiant de l'utilisateur `mdb_helios_user.id` |
 | helios_role   | text, not null                | HELIOS_INSTANCE_MANAGER : gestionnaire de license<br>HELIOS_INSTANCE_USER : utilisateur |
 
-### Synchroniser les licences
+### Synchronisation
 Le type `mdb_helios_sync_user_license` permet de synchroniser les utilisateurs et les licences associées.
+Ce type a été créé spécifiquement pour aider les services informatiques à déclarer automatiquement des licences.
 
 | Type                         | Description                     |
 |------------------------------|---------------------------------|
