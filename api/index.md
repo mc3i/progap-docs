@@ -4,4 +4,4 @@
 
 ## Schéma
 - [Aperçu](schema/overview.html)
-- [Liste complète des types](schema/types.html)
+- [Référence](schema/reference.html)

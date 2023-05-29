@@ -9,6 +9,7 @@ Pour faciliter la lecture et la compréhention du schéma de l'API GraphQL PROGA
 | `mdb_batichiffrage_*`   | Données de l'interface avec BatiChiffrage               |
 | `mdb_catalog_*`         | Données utilisateurs (id, nom, prénom ...)              |
 | `mdb_helios_*`          | Données de licences et de facturation                   |
+| `mdb_helios_sync_*`     | Synchronisation assistée des licences                   |    
 | `mdb_progap_*`          | Données métier PROGAP web                               |
 | `mdb_progapwin_*`       | Données de l'interface avec l'application PROGAP win    |
 | `mui_progap_*`          | Vues de données métier PROGAP web                       |
