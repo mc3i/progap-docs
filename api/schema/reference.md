@@ -2,7 +2,6 @@
 
 ## Sommaire
 - Gestion des licences (*en cours d'écriture*)
-  - [Aperçu](#aperçu)
   - [Utilisateurs](#utilisateurs)
   - [Modèles de licences](#modèles-de-licence)
   - [Licences](#licenses)
@@ -97,7 +96,7 @@ Tableau d'objets composés de :
 }, (...)]
 ```
 
-**sync_options**
+*sync_options*
 
 Objet vide pour le moment.
 
