@@ -79,19 +79,19 @@ Ce type peut être appelé en passant deux arguments :
 Tableau d'objets composés de :
 - information sur l'utilisateur
 - information sur la licence
-```json
+```
 [{
-  "user": {                           # Utilisateur
-    "mail": String!,                  # Adresse mail
-    "firstname": String!,             # Prénom
-    "lastname": String!               # Nom
+  user: {                           # Utilisateur
+    mail: String!,                  # Adresse mail
+    firstname: String!,             # Prénom
+    lastname: String!               # Nom
   },
-  "license": {                        # Licence
-    "license_template_code": String!, # mdb_helios.license_template.code
-    "helios_role": String!,           # HELIOS_INSTANCE_MANAGER ou HELIOS_INSTANCE_USER
-    "dates": [{                       # Dates de licence
-      "start_at": Date!,              # Date de début
-      "close_at": Date                # Date de fin
+  license: {                        # Licence
+    license_template_code: String!, # mdb_helios.license_template.code
+    helios_role: String!,           # HELIOS_INSTANCE_MANAGER ou HELIOS_INSTANCE_USER
+    dates: [{                       # Dates de licence
+      start_at: Date!,              # Date de début
+      close_at: Date                # Date de fin
     }, (...)]
   }
 }, (...)]
