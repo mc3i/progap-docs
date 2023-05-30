@@ -74,12 +74,48 @@ Ce type peut être appelé en passant deux arguments :
 - `sync_data` : données à synchroniser
 - `sync_options` : options de synchronisation
 
+*sync_data*
+
+Tableau d'objets composés de :
+- information sur l'utilisateur
+- information sur la licence
+```json
+[{
+  "user": {                           # Utilisateur
+    "mail": String!,                  # Adresse mail
+    "firstname": String!,             # Prénom
+    "lastname": String!               # Nom
+  },
+  "license": {                        # Licence
+    "license_template_code": String!, # mdb_helios.license_template.code
+    "helios_role": String!,           # HELIOS_INSTANCE_MANAGER ou HELIOS_INSTANCE_USER
+    "dates": [{                       # Dates de licence
+      "start_at": Date!,              # Date de début
+      "close_at": Date                # Date de fin
+    }, (...)]
+  }
+}, (...)]
+```
+
+**sync_options**
+
+Objet vide pour le moment.
+
+```json
+{}
+```
+
+#### Comportement
+Cette requête peut être envoyée à intervalles réguliers (par exemple toutes les nuits) pour synchroniser la liste des utilisateurs de l'entreprise avec PROGAP.
+
+Lorsqu'un utilisateur a été créé et sa licence démarrée à une date précise grâce à la valeur `start_at`, cette date peut plus être modifiée et doit donc toujours être renvoyée avec la même valeur **sauf si** la valeur `start_at` est supérieure à la date du jour (si la licence n'est pas réellement démarrée).
+
+Lorsqu'un utilisateur a été créé et sa licence terminée à une date précise grâce à la valeur `close_at`, cette date peut plus être modifiée et doit donc toujours être renvoyée avec la même valeur **sauf si** la valeur `close_at` est supérieure à la date du jour (si la licence n'est pas réellement terminée). 
+
 #### Retourne
 Ce type retourne une liste de `mdb_helios_license`.
 
-#### Exemples
-```
-""
+#### Exemple
 Cette requête synchronise deux utilisateurs :
 - Nicolas Dupont
 - Francis Rio
@@ -94,8 +130,8 @@ L'utilisateur "Francis Rio"
 - sera associé au modèle de licence dont le code `mdb_helios_license_template.code = "GESTION"`
 - est ouvert depuis le 01/01/2023 
 - est fermé depuis  le 31/03/2023
-""
-
+- 
+```
 mutation SyncLicense {
   mdb_helios_sync_license (
     args: {
@@ -108,7 +144,9 @@ mutation SyncLicense {
         license: {
           license_template_code: "ETUDE",
           helios_role: "HELIOS_INSTANCE_MANAGER",
-          start_at: "2023-01-01"
+          dates: [{
+            start_at: "2023-01-01"
+          }]
         }
       }, {
         user: {
@@ -119,8 +157,10 @@ mutation SyncLicense {
         license: {
           license_template_code: "GESTION",
           helios_role: "HELIOS_INSTANCE_USER",
-          start_at: "2023-01-01",
-          close_at: "2023-03-31"
+          dates: [{
+            start_at: "2023-01-01",
+            close_at: "2023-03-31"
+          }]
         }
       }],
       sync_options: {}
@@ -130,13 +170,6 @@ mutation SyncLicense {
   }
 }
 ```
-
-#### Comportement
-Cette requête peut être envoyée à intervals réguliers (par exemple toutes les nuits) pour synchroniser la liste des utilisateurs de l'entreprise avec PROGAP.
-
-Lorsqu'un utilisateur a été créé et sa licence démarrée à une date précise grâce à la valeur `start_at`, cette date peut plus être modifiée et doit donc toujours être renvoyée avec la même valeur **sauf si** la valeur `start_at` est supérieure à la date du jour (si la licence n'est pas réellement démarrée).
-
-Lorsqu'un utilisateur a été créé et sa licence terminée à une date précise grâce à la valeur `close_at`, cette date peut plus être modifiée et doit donc toujours être renvoyée avec la même valeur **sauf si** la valeur `close_at` est supérieure à la date du jour (si la licence n'est pas réellement terminée). 
 
 ## Gestion des utilisateurs 
 
