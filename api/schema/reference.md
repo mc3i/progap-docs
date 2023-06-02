@@ -1,174 +1,16 @@
 [API](..) / Schéma / Référence
 
 ## Sommaire
-- Gestion des licences (*en cours d'écriture*)
-  - [Utilisateurs](#utilisateurs)
-  - [Modèles de licences](#modèles-de-licence)
-  - [Licences](#licenses)
-  - [Synchronisation](#synchronisation)
 - Gestion des utilisateurs (*en cours d'écriture*)
   - [Utilisateurs](#utilisateurs-1)
   - [Rôles](#rôles)
   - [Affectation](#affectation)
+  - [Licence](#licences)
 - Gestion des affaires (*en cours d'écriture*)
   - [Espaces de travail](#espaces-de-travail)
   - [Droits d'accès aux espaces de travail](#droits-daccès-aux-espaces-de-travail)
   - [Affaires](#affaires)
   - [Droits d'accès aux affaires](#droits-daccès-aux-affaires)
-
-## Gestion des licences
-### Utilisateurs
-Le type `mdb_helios_user` correspond à un utilisateur sous licence PROGAP.
-
-| Type                        | Description                     |
-|-----------------------------|---------------------------------|
-| mdb_helios_user             | Liste des utilisateurs          |
-
-#### Champs
-| Nom           | Type                          | Description                 |
-|---------------|-------------------------------|-----------------------------|
-| id            | uuid, not null, auto, unique  | Identifiant                 |
-| mail          | text, not null, unique        | Adresse e-mail              |
-| firstname     | text, not null                | Prénom                      |
-| lastname      | text, not null                | Nom                         |
-
-### Modèles de licence
-Le type `mdb_helios_license_template` correspond à un modèle de licence PROGAP.
-
-| Type                        | Description                     |
-|-----------------------------|---------------------------------|
-| mdb_helios_license_template | Liste des modèles de licence    |
-
-#### Champs
-| Nom           | Type                          | Description                 |
-|---------------|-------------------------------|-----------------------------|
-| id            | uuid, not null, auto, unique  | Identifiant                 |
-| code          | text, not null, unique        | Code                        |
-| name          | text, not null                | Désignation                 |
-
-### Licenses
-Le type `mdb_helios_license` correspond à une licence PROGAP.
-
-| Type                        | Description                     |
-|-----------------------------|---------------------------------|
-| mdb_helios_license          | Liste des licences              |
-
-#### Champs
-| Nom           | Type                          | Description                 |
-|---------------|-------------------------------|-----------------------------|
-| id            | uuid, not null, auto, unique  | Identifiant                 |
-| user_id       | uuid, not null                | Identifiant de l'utilisateur `mdb_helios_user.id` |
-| helios_role   | text, not null                | HELIOS_INSTANCE_MANAGER : gestionnaire de license<br>HELIOS_INSTANCE_USER : utilisateur |
-
-### Synchronisation
-Le type `mdb_helios_sync_user_license` permet de synchroniser les utilisateurs et les licences associées.
-Ce type a été créé spécifiquement pour aider les services informatiques à déclarer automatiquement des licences.
-
-| Type                         | Description                     |
-|------------------------------|---------------------------------|
-| mdb_helios_sync_user_license | Synchronise les utilisateurs et les licences associées |
-
-#### Arguments
-Ce type peut être appelé en passant deux arguments :
-- `sync_data` : données à synchroniser
-- `sync_options` : options de synchronisation
-
-*sync_data*
-
-Tableau d'objets composés de :
-- information sur l'utilisateur
-- information sur la licence
-```
-[{
-  user: {                           # Utilisateur
-    mail: String!,                  # Adresse mail
-    firstname: String!,             # Prénom
-    lastname: String!               # Nom
-  },
-  license: {                        # Licence
-    license_template_code: String!, # mdb_helios.license_template.code
-    helios_role: String!,           # HELIOS_INSTANCE_MANAGER ou HELIOS_INSTANCE_USER
-    dates: [{                       # Dates de licence
-      start_at: Date!,              # Date de début
-      close_at: Date                # Date de fin
-    }, (...)]
-  }
-}, (...)]
-```
-
-*sync_options*
-
-Objet vide pour le moment.
-
-```json
-{}
-```
-
-#### Comportement
-Cette requête peut être envoyée à intervalles réguliers (par exemple toutes les nuits) pour synchroniser la liste des utilisateurs de l'entreprise avec PROGAP.
-
-Lorsqu'un utilisateur a été créé et sa licence démarrée à une date précise grâce à la valeur `start_at`, cette date peut plus être modifiée et doit donc toujours être renvoyée avec la même valeur **sauf si** la valeur `start_at` est supérieure à la date du jour (si la licence n'est pas réellement démarrée).
-
-Lorsqu'un utilisateur a été créé et sa licence terminée à une date précise grâce à la valeur `close_at`, cette date peut plus être modifiée et doit donc toujours être renvoyée avec la même valeur **sauf si** la valeur `close_at` est supérieure à la date du jour (si la licence n'est pas réellement terminée). 
-
-#### Retourne
-Ce type retourne une liste de `mdb_helios_license`.
-
-#### Exemple
-Cette requête synchronise deux utilisateurs :
-- Nicolas Dupont
-- Francis Rio
-
-L'utilisateur "Nicolas Dupont" 
-- sera gestionnaire de licences
-- sera associé au modèle de licence dont le code `mdb_helios_license_template.code = "ETUDE"`
-- est ouvert depuis le 01/01/2023
-
-L'utilisateur "Francis Rio" 
-- sera utilisateur
-- sera associé au modèle de licence dont le code `mdb_helios_license_template.code = "GESTION"`
-- est ouvert depuis le 01/01/2023 
-- est fermé depuis  le 31/03/2023
-- 
-```
-mutation SyncLicense {
-  mdb_helios_sync_license (
-    args: {
-      sync_data: [{
-        user: {
-          mail: "n.dupont@mc3i.fr",
-          firstname: "Nicolas",
-          lastname: "Dupont"
-        },
-        license: {
-          license_template_code: "ETUDE",
-          helios_role: "HELIOS_INSTANCE_MANAGER",
-          dates: [{
-            start_at: "2023-01-01"
-          }]
-        }
-      }, {
-        user: {
-          mail: "f.rio@mc3i.fr",
-          firstname: "Francis",
-          lastname: "Rio"
-        },
-        license: {
-          license_template_code: "GESTION",
-          helios_role: "HELIOS_INSTANCE_USER",
-          dates: [{
-            start_at: "2023-01-01",
-            close_at: "2023-03-31"
-          }]
-        }
-      }],
-      sync_options: {}
-    }
-  ) {
-    id
-  }
-}
-```
 
 ## Gestion des utilisateurs 
 
@@ -261,6 +103,80 @@ Le type `mdb_catalog_grant` associe un `mdb_catalog_user` à un `mdb_catalog_rol
 |-----------------------------|---------------------------------|
 | grant_pkey                  | `id` unique                     |
 | grant_user_id_role_id_key   | `user_id` et `role_id` unique   |
+
+
+### Licences
+Le type `mdb_catalog_sync_user` permet de synchroniser les utilisateurs et les licences associées.
+Ce type a été créé spécifiquement pour aider les services informatiques à déclarer les licences.
+
+| Type                         | Description                     |
+|------------------------------|---------------------------------|
+| mdb_catalog_sync_user        | Synchronise les utilisateurs et les licences associées |
+
+#### Comportement
+Cette requête peut être envoyée à intervalles réguliers (par exemple toutes les nuits) pour synchroniser la liste des utilisateurs de l'entreprise avec PROGAP.
+
+Lorsqu'un utilisateur a été créé et sa licence démarrée à une date précise grâce à la valeur `start_at`, cette date peut plus être modifiée et doit donc toujours être renvoyée avec la même valeur **sauf si** la valeur `start_at` est supérieure à la date du jour (si la licence n'est pas réellement démarrée).
+
+Lorsqu'un utilisateur a été créé et sa licence terminée à une date précise grâce à la valeur `close_at`, cette date peut plus être modifiée et doit donc toujours être renvoyée avec la même valeur **sauf si** la valeur `close_at` est supérieure à la date du jour (si la licence n'est pas réellement terminée). 
+
+#### Retourne
+Ce type retourne une liste de `mdb_catalog_user`.
+
+#### Exemple
+Cette requête synchronise deux utilisateurs :
+- Nicolas Dupont
+- Francis Rio
+
+L'utilisateur "Nicolas Dupont" 
+- sera gestionnaire de licences
+- sera associé au modèle de licence dont le code `mdb_helios_license_template.code = "ETUDE"`
+- est ouvert depuis le 01/01/2023
+
+L'utilisateur "Francis Rio" 
+- sera utilisateur
+- sera associé au modèle de licence dont le code `mdb_helios_license_template.code = "GESTION"`
+- est ouvert depuis le 01/01/2023 
+- est fermé depuis  le 31/03/2023
+- 
+```
+mutation SyncUser {
+  mdb_catalog_sync_user (
+    objects: [{
+        mail: "n.dupont@mc3i.fr",
+        firstname: "Nicolas",
+        lastname: "Dupont",
+        license: {
+          helios_role: "HELIOS_INSTANCE_MANAGER",
+          license_template: {
+            code: "ETUDE"
+          },
+          license_dates: [{
+            start_at: "2023-01-01"
+          }]
+        }
+      }, {
+        mail: "f.rio@mc3i.fr",
+        firstname: "Francis",
+        lastname: "Rio"
+        license: {
+          helios_role: "HELIOS_INSTANCE_USER",
+          license_template: {
+            code: "GESTION"
+          },
+          license_dates: [{
+            start_at: "2023-01-01",
+            close_at: "2023-03-31"
+          }]
+        }
+      }]
+  ) {
+    id
+    firstname
+    lastname
+  }
+}
+```
 
 ## Gestion des affaires 
 
