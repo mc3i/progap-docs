@@ -335,7 +335,7 @@ query {
 }
 ```
 
-```json
+```jsonc
 # Réponse
 
 {
@@ -343,52 +343,52 @@ query {
     "mui_progap_estimate_global_info": [
       {
 
-        # Données calculées du devis
+        // Données calculées du devis
         "info": {
 
-          # Valeur déboursé
+          // Valeur déboursé
           "cost": 362714.263,
 
-          # Valeur vente
+          // Valeur vente
           "sold": 520000,
 
-          # Valeur ventilation
+          // Valeur ventilation
           "spread": 520000,
 
-          # Valeur devis commercial
+          // Valeur devis commercial
           "quotation": 520010.168,
 
-          # K vente
+          // K vente
           "k_sold": 1.43364,
 
-          # K ventilation
+          // K ventilation
           "k_spread": 1.43364,
 
-          # K devis commercial
+          // K devis commercial
           "k_quotation": 1.43366,
 
-          # Données calculées des marchés
+          // Données calculées des marchés
           "contracts": [
             {
-              # Rappel de l'identifiant du devis
+              // Rappel de l'identifiant du devis
               "estimate_id": "d9eeb1a2-2b46-4e39-ae2c-b5dfca0ff5ac",
 
-              # Identifiant du marché
+              // Identifiant du marché
               "id": "719d9ca1-5605-4c52-832c-c1137f0e7d0a",
 
-              # Valeur déboursé
+              // Valeur déboursé
               "cost": 362714.263,
 
-              # Valeur vente
+              // Valeur vente
               "sold_calculated": 520000,
 
-              # K vente
+              // K vente
               "k_sold": 1.43364,
 
-              # % / déboursé du devis
+              // % / déboursé du devis
               "cost_proportion": 1,
 
-              # % / vente du devis
+              // % / vente du devis
               "sold_proportion": 1
             }
           ]
@@ -558,98 +558,98 @@ La réponse détaillée ci-dessous (réalisée par zone) est identique pour :
 - Des codes techniques
 - Des quantités par zones
 
-```json
+```jsonc
 {
   "data": {
     "mui_progap_estimate_global_info": [
       {
 
-        # Valeurs de devis
+        // Valeurs de devis
         "info": {
           
-          # Valeur déboursé
+          // Valeur déboursé
           "cost": 362714.263,
 
-          # Valeur vente
+          // Valeur vente
           "sold": 520000,
 
-          # Valeur ventilation
+          // Valeur ventilation
           "spread": 520000,
 
-          # Valeur devis commercial
+          // Valeur devis commercial
           "quotation": 520010.168,
 
-          # K vente
+          // K vente
           "k_sold": 1.43364,
 
-          # K ventilation
+          // K ventilation
           "k_spread": 1.43364,
 
-          # K devis commercial
+          // K devis commercial
           "k_quotation": 1.43366,
 
-          # Zones
+          // Zones
           "areas": [
             {
 
-              # Identifiant de la zone
+              // Identifiant de la zone
               "id": "796a7e89-2db8-49ed-8973-eda3d29a9240",
 
-              # Valeur déboursé
+              // Valeur déboursé
               "cost": 362714.263,
 
-              # Valeur vente
+              // Valeur vente
               "sold": 520000,
 
-              # Valeur devis commercial
+              // Valeur devis commercial
               "quotation": 520010.168,
 
-              # K vente
+              // K vente
               "k_sold": 1.43364,
 
-              # % / valeur déboursé du devis
+              // % / valeur déboursé du devis
               "cost_proportion": 1,
 
-              # % / valeur vente du devis
+              // % / valeur vente du devis
               "sold_proportion": 1,
 
-              # Compteurs
+              // Compteurs
               "counters": [
                 {
-                  # Identifiant de la famille analytique associée
+                  // Identifiant de la famille analytique associée
                   "counter_id": "d931a40e-8778-4495-b6b4-5308a4a1777a",
 
-                  # Quantité déboursé
+                  // Quantité déboursé
                   "quantity": 4681.978,
 
-                  # Valeur déboursé
+                  // Valeur déboursé
                   "cost": 107685.494,
 
-                  # Valeur vente
+                  // Valeur vente
                   "sold": 159070.801
                 }, {
-                  /* ... autres compteurs */
+                  //... autres compteurs
                 }
               ],
 
-              # Variables
+              // Variables
               "variables": [
                 {
 
-                  # Identifiant de la variable
+                  // Identifiant de la variable
                   "variable_id": "604fd744-cf8b-4b21-91ae-c50c5f970f29",
 
-                  # Déboursé unitaire (valeur déboursé de la zone / quantité de la variable) 
+                  // Déboursé unitaire (valeur déboursé de la zone / quantité de la variable) 
                   "unit_cost": 362.714,
 
-                  # Vente unitaire (valeur vente de la zone / quantité de la variable)
+                  // Vente unitaire (valeur vente de la zone / quantité de la variable)
                   "unit_sold": 520
                 }, {
-                  /* ... autres variables */
+                  // ... autres variables
                 }
               ]
             }, {
-              /* ... autres zones */
+              // ... autres zones
             }
           ]
         }
