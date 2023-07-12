@@ -11,6 +11,8 @@
   - [Droits d'accès aux espaces de travail](#droits-daccès-aux-espaces-de-travail)
   - [Affaires](#affaires)
   - [Droits d'accès aux affaires](#droits-daccès-aux-affaires)
+- Données calculées (*en cours d'écriture*)
+  - [Données calculées de devis](#données-calculées-de-devis)
 
 ## Gestion des utilisateurs 
 
@@ -138,7 +140,7 @@ L'utilisateur "Francis Rio"
 - sera associé au modèle de licence dont le code `mdb_helios_license_template.code = "GESTION"`
 - est ouvert depuis le 01/01/2023 
 - est fermé depuis  le 31/03/2023
-- 
+
 ```
 mutation SyncUser {
   mdb_catalog_sync_user (
@@ -278,3 +280,370 @@ Le type `mdb_progap_project_role` associe un `mdb_catalog_role` à un `mdb_proga
 |-----------------------------|---------------------------------|
 | project_role_pkey           | `id` unique                     |
 | project_role_project_id_role_id_key | `project_id` et `role_id` unique |
+
+## Données calculées
+
+Certaines données de PROGAP ne sont pas stockées mais sont calculées en temps réel (par exemple le prix
+total d'un devis est calculé en temps réel lorsque l'interface utilisateur en a besoin).
+
+### Données calculées de devis
+Le type `mui_progap_estimate_global_info` permet de récupérer toutes les données calculées en temps réel
+relatives à un devis.
+
+Ces donnée sont généralement : 
+- Les valeurs du devis et les informations associées à un devis (tâches, zones ...)
+- Les ratios du devis et les informations associées à un devis (tâches, zones ...)
+
+Depuis le type `mui_progap_estimate_global_info`, il est possible de récupérer les valeurs et les ratios 
+des informations suivantes :
+- Du devis 
+- Des zones 
+- Des lots
+- Des budgets
+- Des marchés
+- Des familles analytiques 
+- Des colonnes de coefficients de vente
+- Des ventilations
+- Des tâches
+- Des familles de vente
+- Des variables
+- Des codes techniques
+- Des quantités par zones
+
+**Exemple de reqûete**
+
+La requête ci-dessous récupère les données calculées des marchés d'un devis dont l'identifiant de la table `mdb_progap_estimate` est `d9eeb1a2-2b46-4e39-ae2c-b5dfca0ff5ac`.
+
+```
+# Requête
+
+query {
+  mui_progap_estimate_global_info(args: {
+
+    # L'identifiant du devis
+    estimate_id: "d9eeb1a2-2b46-4e39-ae2c-b5dfca0ff5ac"
+
+    # Options des valeurs à récupérer
+    options: {
+
+      # Marchés
+      contracts: true
+    }
+  }) {
+    info
+  }
+}
+```
+
+```json
+# Réponse
+
+{
+  "data": {
+    "mui_progap_estimate_global_info": [
+      {
+
+        # Données calculées du devis
+        "info": {
+
+          # Valeur déboursé
+          "cost": 362714.263,
+
+          # Valeur vente
+          "sold": 520000,
+
+          # Valeur ventilation
+          "spread": 520000,
+
+          # Valeur devis commercial
+          "quotation": 520010.168,
+
+          # K vente
+          "k_sold": 1.43364,
+
+          # K ventilation
+          "k_spread": 1.43364,
+
+          # K devis commercial
+          "k_quotation": 1.43366,
+
+          # Données calculées des marchés
+          "contracts": [
+            {
+              # Rappel de l'identifiant du devis
+              "estimate_id": "d9eeb1a2-2b46-4e39-ae2c-b5dfca0ff5ac",
+
+              # Identifiant du marché
+              "id": "719d9ca1-5605-4c52-832c-c1137f0e7d0a",
+
+              # Valeur déboursé
+              "cost": 362714.263,
+
+              # Valeur vente
+              "sold_calculated": 520000,
+
+              # K vente
+              "k_sold": 1.43364,
+
+              # % / déboursé du devis
+              "cost_proportion": 1,
+
+              # % / vente du devis
+              "sold_proportion": 1
+            }
+          ]
+        }
+      }
+    ]
+  }
+}
+```
+
+### Options détaillées de requête
+
+```
+query {
+  mui_progap_estimate_global_info (args: {
+    
+    # L'identifiant du devis
+    estimate_id: "d9eeb1a2-2b46-4e39-ae2c-b5dfca0ff5ac"
+
+    # Options des valeurs à récupérer
+    options: {
+
+      # Zones
+      areas: true
+
+      # Zones détaillées
+      areas: {
+
+        # Compteurs
+      	counters: true
+
+        # Variables
+      	variables: true				
+      }
+
+      # Lots
+      batches: true
+
+      # Lots détaillés
+      batches: {
+
+        # Compteurs
+      	counters: true
+
+        # Variables
+      	variables: true				
+      }
+
+      # Budgets
+      budgets: true
+
+      # Budgets détaillés
+      budgets: {
+
+        # Compteurs
+      	counters: true
+
+        # Variables
+      	variables: true				
+      }
+
+      # Marchés
+      contracts: {
+
+        # Compteurs
+      	counters: true
+
+        # Variables
+      	variables: true				
+      }
+
+      # Familles analytiques
+      sections: {
+
+        # Compteurs
+      	counters: true
+
+        # Variables
+      	variables: true				
+      }
+
+      # Colonnes de coefficients de vente
+      sells: true
+
+      # Ventilations
+      spreads: true
+
+      # Tâches
+      tasks: true
+
+      # Tâches détaillées
+      tasks: {
+
+          # Lots
+      		batches: true
+
+          # Compteurs
+      		counters: true
+
+          # Consultations
+      		consultations: true
+
+          # Articles
+      		items: true
+
+          # Variables
+      		variables: true				
+      }
+
+      # Familles de vente
+      trades: true
+
+      # Familles de vente détaillées
+      trades: {
+
+        # Compteurs
+      	counters: true
+
+        # Variables
+      	variables: true				
+      }
+
+      # Variables
+      variables: true
+
+      # Variables détaillées
+      variables: {
+
+        # Compteurs
+      	counters: true
+      }
+
+      # Codes techniques
+      zones: true
+
+      # Codes techniques détaillés
+      zones: {
+
+          # Compteurs
+      		counters: true
+
+          # Variables
+      		variables: true				
+      }
+
+      # Quantités par zones
+      virtual_forecasts: true
+    }
+  }) {
+    info
+  }
+}
+```
+
+### Valeurs détaillées de réponses
+
+La réponse détaillée ci-dessous (réalisée par zone) est identique pour toutes les autres o
+
+```json
+{
+  "data": {
+    "mui_progap_estimate_global_info": [
+      {
+
+        # Valeurs de devis
+        "info": {
+          
+          # Valeur déboursé
+          "cost": 362714.263,
+
+          # Valeur vente
+          "sold": 520000,
+
+          # Valeur ventilation
+          "spread": 520000,
+
+          # Valeur devis commercial
+          "quotation": 520010.168,
+
+          # K vente
+          "k_sold": 1.43364,
+
+          # K ventilation
+          "k_spread": 1.43364,
+
+          # K devis commercial
+          "k_quotation": 1.43366,
+
+          # Zones
+          "areas": [
+            {
+
+              # Identifiant de la zone
+              "id": "796a7e89-2db8-49ed-8973-eda3d29a9240",
+
+              # Valeur déboursé
+              "cost": 362714.263,
+
+              # Valeur vente
+              "sold": 520000,
+
+              # Valeur devis commercial
+              "quotation": 520010.168,
+
+              # K vente
+              "k_sold": 1.43364,
+
+              # % / valeur déboursé du devis
+              "cost_proportion": 1,
+
+              # % / valeur vente du devis
+              "sold_proportion": 1,
+
+              # Compteurs
+              "counters": [
+                {
+                  # Identifiant de la famille analytique associée
+                  "counter_id": "d931a40e-8778-4495-b6b4-5308a4a1777a",
+
+                  # Quantité déboursé
+                  "quantity": 4681.978,
+
+                  # Valeur déboursé
+                  "cost": 107685.494,
+
+                  # Valeur vente
+                  "sold": 159070.801
+                }, {
+                  /* ... autres compteurs */
+                }
+              ],
+
+              # Variables
+              "variables": [
+                {
+
+                  # Identifiant de la variable
+                  "variable_id": "604fd744-cf8b-4b21-91ae-c50c5f970f29",
+
+                  # Déboursé unitaire (valeur déboursé de la zone / quantité de la variable) 
+                  "unit_cost": 362.714,
+
+                  # Vente unitaire (valeur vente de la zone / quantité de la variable)
+                  "unit_sold": 520
+                }, {
+                  /* ... autres variables */
+                }
+              ]
+            }, {
+              /* ... autres zones */
+            }
+          ]
+        }
+      }
+    ]
+  }
+}
+```
