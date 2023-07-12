@@ -2,17 +2,17 @@
 
 ## Sommaire
 - Gestion des utilisateurs (*en cours d'écriture*)
-  - [Utilisateurs](#utilisateurs-1)
-  - [Rôles](#rôles)
+  - [Utilisateurs](#utilisateurs)
+  - [Rôles](#rles)
   - [Affectation](#affectation)
   - [Licence](#licences)
 - Gestion des affaires (*en cours d'écriture*)
   - [Espaces de travail](#espaces-de-travail)
-  - [Droits d'accès aux espaces de travail](#droits-daccès-aux-espaces-de-travail)
+  - [Droits d'accès aux espaces de travail](#droits-daccs-aux-espaces-de-travail)
   - [Affaires](#affaires)
-  - [Droits d'accès aux affaires](#droits-daccès-aux-affaires)
+  - [Droits d'accès aux affaires](#droits-daccs-aux-affaires)
 - Données calculées (*en cours d'écriture*)
-  - [Données calculées de devis](#données-calculées-de-devis)
+  - [Données calculées de devis](#donnes-calcules-de-devis)
 
 ## Gestion des utilisateurs 
 
@@ -336,7 +336,7 @@ query {
 ```
 
 ```jsonc
-# Réponse
+// Réponse
 
 {
   "data": {
