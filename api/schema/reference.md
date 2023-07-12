@@ -545,7 +545,18 @@ query {
 
 ### Valeurs détaillées de réponses
 
-La réponse détaillée ci-dessous (réalisée par zone) est identique pour toutes les autres o
+La réponse détaillée ci-dessous (réalisée par zone) est identique pour :
+- Des lots
+- Des budgets
+- Des marchés
+- Des familles analytiques 
+- Des colonnes de coefficients de vente
+- Des ventilations
+- Des tâches
+- Des familles de vente
+- Des variables
+- Des codes techniques
+- Des quantités par zones
 
 ```json
 {
