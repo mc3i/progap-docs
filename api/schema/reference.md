@@ -12,6 +12,7 @@
   - [Affaires](#affaires)
   - [Droits d'accès aux affaires](#droits-daccs-aux-affaires)
 - Données calculées (*en cours d'écriture*)
+  - [Données calculées de bibliothèque](#donnees-calcules-de-bibliothèque)
   - [Données calculées de devis](#donnes-calcules-de-devis)
 
 ## Gestion des utilisateurs 
@@ -286,6 +287,192 @@ Le type `mdb_progap_project_role` associe un `mdb_catalog_role` à un `mdb_proga
 Certaines données de PROGAP ne sont pas stockées mais sont calculées en temps réel (par exemple le prix
 total d'un devis est calculé en temps réel lorsque l'interface utilisateur en a besoin).
 
+### Données calculées de bibliothèque
+Le type `mui_progap_library_global_info` permet de récupérer toutes les données calculées en temps réel
+relatives à une bibliothèque.
+
+Ces donnée sont généralement : 
+- Les valeurs de la bibliothèque et les informations associées à un devis (tâches, zones ...)
+- Les ratios de la bibliothèque et les informations associées à un devis (tâches, zones ...)
+
+Depuis le type `mui_progap_library_global_info`, il est possible de récupérer les valeurs et les ratios 
+des informations suivantes :
+- De la bibliothèque
+- Des articles
+- Des sous-détails
+- Des prix unitaires par version de bibliothèque
+
+
+**Exemple de reqûete**
+
+La requête ci-dessous récupère les données calculées des marchés d'une bibliothèque dont l'identifiant de la table `mdb_progap_library` est `14d87084-ca0b-4074-abb0-d2b306db2919`.
+
+```
+# Requête
+
+query {
+  mui_progap_library_global_info(args: {
+
+    # L'identifiant de la bibliothèque
+    library_id: "14d87084-ca0b-4074-abb0-d2b306db2919"
+
+    # Options des valeurs à récupérer
+    options: {
+
+      # Articles
+      items: true
+    }
+  }) {
+    info
+  }
+}
+```
+
+```jsonc
+// Réponse
+
+{
+  "data": {
+    "mui_progap_library_global_info": [
+      {
+
+        // Données calculées de bibliothèque
+        "info": {
+
+          // Liste des articles
+          "items": [
+            {
+              // Identifiant de l'article
+              "id": "80aa10e6-2fbf-44ff-9895-2e3ac10dae02",
+
+              // Code de l'article
+              "code": "407AGC20",
+
+              // Prix unitaire dans la devise de la bibliothèque
+              "cost_a": 41.57,
+
+              // Prix unitaire dans la devise de l'article
+              "cost_b": 41.57
+            }, {
+              // ... autres articles
+            }
+          ]
+        }
+      }
+    ]
+  }
+}
+```
+
+#### Options détaillées de requête
+
+```
+# Requête
+
+query {
+  mui_progap_library_global_info(args: {
+
+    # L'identifiant de la bibliothèque
+    library_id: "14d87084-ca0b-4074-abb0-d2b306db2919"
+
+    # Options des valeurs à récupérer
+    options: {
+
+      # Articles
+      items: true
+
+      # Articles détaillés
+      items: {
+
+        # Compteurs
+        counters: true
+      }
+      
+      # Prix unitaires par version de bibliothèque
+      virtual_components: true
+    }
+  }) {
+    info
+  }
+}
+```
+
+#### Valeurs détaillées de réponse
+
+```jsonc
+// Réponse
+
+{
+  "data": {
+    "mui_progap_library_global_info": [
+      {
+
+        // Données calculées de bibliothèque
+        "info": {
+
+          // Liste des articles
+          "items": [
+            {
+              // Identifiant de l'article
+              "id": "80aa10e6-2fbf-44ff-9895-2e3ac10dae02",
+
+              // Code de l'article
+              "code": "407AGC20",
+
+              // Prix unitaire dans la devise de la bibliothèque
+              "cost_a": 41.57,
+
+              // Prix unitaire dans la devise de l'article
+              "cost_b": 41.57,
+
+              // Compteurs
+              "counters": [
+                {
+
+                  // Identifiant de la famille analytique
+                  "counter_id": "d931a40e-8778-4495-b6b4-5308a4a1777a",
+
+                  // Prix unitaire dans la devise de la bibliothèque
+                  "cost_a": 27.6,
+
+                  // Prix unitaire dans la devise de l'article
+                  "cost_b": 27.6,
+
+                  // Quantité
+                  "quantity": 1.2
+                }
+              ]
+            }, {
+              // ... autres articles
+            }
+          ],
+
+          // Liste des prix unitaires par version de bibliothèque
+          "virtual_components": [
+            {
+
+              // Identifiant de l'article
+              "item_id": "b6c72b04-b220-4375-8aa1-4882baebb051",
+
+              // Identifiant de la version de bibliothèque
+              "library_version_id": "21b9e21f-c9ab-46a6-828c-97813ed18ee7",
+
+              // Prix unitaire dans la monnaie de la bibliothèque
+              "cost_a": 131.36,
+
+              // Prix unitaire dans la monnaie de la version 
+              "cost_b": 131.36
+            }, {
+              // ... autres prix unitaires par version de bibliothèque
+            }
+          ]
+        }
+      }
+    ]
+  }
+}
+```
+
 ### Données calculées de devis
 Le type `mui_progap_estimate_global_info` permet de récupérer toutes les données calculées en temps réel
 relatives à un devis.
@@ -367,7 +554,7 @@ query {
           // K devis commercial
           "k_quotation": 1.43366,
 
-          // Données calculées des marchés
+          // Liste des marchés
           "contracts": [
             {
               // Rappel de l'identifiant du devis
@@ -390,6 +577,8 @@ query {
 
               // % / vente du devis
               "sold_proportion": 1
+            }, {
+              // ... autres marchés
             }
           ]
         }
@@ -399,9 +588,11 @@ query {
 }
 ```
 
-### Options détaillées de requête
+#### Options détaillées de requête
 
 ```
+# Requête
+
 query {
   mui_progap_estimate_global_info (args: {
     
@@ -543,7 +734,7 @@ query {
 }
 ```
 
-### Valeurs détaillées de réponses
+#### Valeurs détaillées de réponses
 
 La réponse détaillée ci-dessous (réalisée par zone) est identique pour :
 - Des lots
