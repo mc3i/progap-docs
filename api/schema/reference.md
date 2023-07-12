@@ -12,7 +12,7 @@
   - [Affaires](#affaires)
   - [Droits d'accès aux affaires](#droits-daccs-aux-affaires)
 - Données calculées (*en cours d'écriture*)
-  - [Données calculées de bibliothèque](#donnees-calcules-de-bibliothèque)
+  - [Données calculées de bibliothèque](#donnes-calcules-de-bibliothque)
   - [Données calculées de devis](#donnes-calcules-de-devis)
 
 ## Gestion des utilisateurs 
@@ -387,7 +387,7 @@ query {
         # Compteurs
         counters: true
       }
-      
+
       # Prix unitaires par version de bibliothèque
       virtual_components: true
     }
