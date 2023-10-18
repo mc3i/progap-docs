@@ -159,7 +159,7 @@ Les mouvements de licences effectués sur un utilisateur (passage d'un modèle d
 Lors d'un passage d'un modèle de licence à un autre, le précédent modèle de licence sera facturé jusqu'à la veille du changement et le nouveau modèle sera facturé à partir du jour du changement.
 
 #### Supprimer des licences
-Pour ajouter des licences, il suffit d'envoyer la liste des utilisateurs concernés ainsi que le code de modèle de licence configuré avec M&C 3i.
+Pour supprimer des licences, il suffit d'envoyer la liste des utilisateurs concernés ainsi que le code de modèle de licence configuré avec M&C 3i.
 
 Par exemple, cette requête ajoute (ou modifie) la licence de deux utilisateurs :
 - Nicolas Dupont
@@ -179,6 +179,8 @@ mutation CloseLicense {
   }
 }
 ```
+
+Une licence supprimée sera facturé jusqu'à la veille de sa suppression.
 
 ## Gestion des affaires 
 
