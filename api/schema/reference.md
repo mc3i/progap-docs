@@ -109,74 +109,73 @@ Le type `mdb_catalog_grant` associe un `mdb_catalog_user` à un `mdb_catalog_rol
 
 
 ### Licences
-Le type `mdb_catalog_sync_user` permet de synchroniser les utilisateurs et les licences associées.
-Ce type a été créé spécifiquement pour aider les services informatiques à déclarer les licences.
 
-| Type                         | Description                     |
-|------------------------------|---------------------------------|
-| mdb_catalog_sync_user        | Synchronise les utilisateurs et les licences associées |
+Deux types existent pour synchroniser les utilisateurs et les licences :
+| Type                            | Description                     |
+|---------------------------------|---------------------------------|
+| mdb_catalog_sync_start_license  | Ajoute ou modifie des licences  |
+| mdb_catalog_sync_close_license  | Supprime des licences           |
 
-#### Comportement
-Cette requête peut être envoyée à intervalles réguliers (par exemple toutes les nuits) pour synchroniser la liste des utilisateurs de l'entreprise avec PROGAP.
+#### Ajouter ou modifier des licences
+Pour ajouter des licences, il suffit d'envoyer la liste des utilisateurs concernés ainsi que le code de modèle de licence configuré avec M&C 3i.
 
-Lorsqu'un utilisateur a été créé et sa licence démarrée à une date précise grâce à la valeur `start_at`, cette date peut plus être modifiée et doit donc toujours être renvoyée avec la même valeur **sauf si** la valeur `start_at` est supérieure à la date du jour (si la licence n'est pas réellement démarrée).
-
-Lorsqu'un utilisateur a été créé et sa licence terminée à une date précise grâce à la valeur `close_at`, cette date peut plus être modifiée et doit donc toujours être renvoyée avec la même valeur **sauf si** la valeur `close_at` est supérieure à la date du jour (si la licence n'est pas réellement terminée). 
-
-#### Retourne
-Ce type retourne une liste de `mdb_catalog_user`.
-
-#### Exemple
-Cette requête synchronise deux utilisateurs :
+Par exemple, cette requête ajoute (ou modifie) la licence de deux utilisateurs :
 - Nicolas Dupont
 - Francis Rio
 
 L'utilisateur "Nicolas Dupont" 
-- sera gestionnaire de licences
-- sera associé au modèle de licence dont le code `mdb_helios_license_template.code = "ETUDE"`
-- est ouvert depuis le 01/01/2023
+- sera désormais gestionnaire de licences
+- sera désormais associé au modèle de licence dont le code `mdb_helios_license_template.code = "ETUDE"`
 
 L'utilisateur "Francis Rio" 
-- sera utilisateur
-- sera associé au modèle de licence dont le code `mdb_helios_license_template.code = "GESTION"`
-- est ouvert depuis le 01/01/2023 
-- est fermé depuis  le 31/03/2023
+- sera désormais utilisateur
+- sera désormais associé au modèle de licence dont le code `mdb_helios_license_template.code = "GESTION"`
 
 ```
-mutation SyncUser {
-  mdb_catalog_sync_user (
-    objects: [{
-        mail: "n.dupont@mc3i.fr",
-        firstname: "Nicolas",
-        lastname: "Dupont",
-        license: {
-          helios_role: "HELIOS_INSTANCE_MANAGER",
-          license_template: {
-            code: "ETUDE"
-          },
-          license_dates: [{
-            start_at: "2023-01-01"
-          }]
-        }
-      }, {
-        mail: "f.rio@mc3i.fr",
-        firstname: "Francis",
-        lastname: "Rio"
-        license: {
-          helios_role: "HELIOS_INSTANCE_USER",
-          license_template: {
-            code: "GESTION"
-          },
-          license_dates: [{
-            start_at: "2023-01-01",
-            close_at: "2023-03-31"
-          }]
-        }
-      }]
+mutation StartLicense {
+  mdb_catalog_sync_start_license(
+    detail_data: [{
+    	user_mail: "n.dupont@mc3i.fr", 
+      user_firstname: "Nicolas", 
+      user_lastname: "Dupont", 
+      helios_role: "HELIOS_INSTANCE_MANAGER", 
+      license_template_code: "ETUDE"
+    }, {
+      user_mail: "f.rio@mc3i.fr", 
+      user_firstname: "Francis", 
+      user_lastname: "Rio", 
+      helios_role: "HELIOS_INSTANCE_USER", 
+      license_template_code: "GESTION"
+    }], 
+    detail_options: {}
   ) {
     id
-    firstname
-    lastname
+  }
+}
+```
+
+Les mouvements de licences effectués sur un utilisateur (passage d'un modèle de licence à un autre) peuvent mettre jusqu'à 5 minutes à se propager dans PROGAP web.
+
+Lors d'un passage d'un modèle de licence à un autre, le précédent modèle de licence sera facturé jusqu'à la veille du changement et le nouveau modèle sera facturé à partir du jour du changement.
+
+#### Supprimer des licences
+Pour ajouter des licences, il suffit d'envoyer la liste des utilisateurs concernés ainsi que le code de modèle de licence configuré avec M&C 3i.
+
+Par exemple, cette requête ajoute (ou modifie) la licence de deux utilisateurs :
+- Nicolas Dupont
+- Francis Rio
+
+```
+mutation CloseLicense {
+  mdb_catalog_sync_close_license(
+    detail_data: [{
+    	user_mail: "n.dupont@mc3i.fr"
+    }, {
+      user_mail: "f.rio@mc3i.fr"
+    }], 
+    detail_options: {}
+  ) {
+    id
   }
 }
 ```
@@ -429,7 +428,7 @@ query {
               "counters": [
                 {
 
-                  // Identifiant de la famille analytique
+                  // Identifiant de la famille analytique (mdb_progap_section.id)
                   "counter_id": "d931a40e-8778-4495-b6b4-5308a4a1777a",
 
                   // Prix unitaire dans la devise de la bibliothèque
@@ -454,7 +453,7 @@ query {
               // Identifiant de l'article
               "item_id": "b6c72b04-b220-4375-8aa1-4882baebb051",
 
-              // Identifiant de la version de bibliothèque
+              // Identifiant de la version de bibliothèque (mdb_progap_library_version.id)
               "library_version_id": "21b9e21f-c9ab-46a6-828c-97813ed18ee7",
 
               // Prix unitaire dans la monnaie de la bibliothèque
