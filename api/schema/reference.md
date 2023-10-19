@@ -134,7 +134,7 @@ L'utilisateur "Francis Rio"
 ```
 mutation StartLicense {
   mdb_catalog_sync_start_license(
-    detail_data: [{
+    objects: [{
     	user_mail: "n.dupont@mc3i.fr", 
       user_firstname: "Nicolas", 
       user_lastname: "Dupont", 
@@ -147,7 +147,7 @@ mutation StartLicense {
       helios_role: "HELIOS_INSTANCE_USER", 
       license_template_code: "GESTION"
     }], 
-    detail_options: {}
+    options: {}
   ) {
     id
   }
@@ -168,12 +168,12 @@ Par exemple, cette requête ajoute (ou modifie) la licence de deux utilisateurs 
 ```
 mutation CloseLicense {
   mdb_catalog_sync_close_license(
-    detail_data: [{
+    objects: [{
     	user_mail: "n.dupont@mc3i.fr"
     }, {
       user_mail: "f.rio@mc3i.fr"
     }], 
-    detail_options: {}
+    options: {}
   ) {
     id
   }
