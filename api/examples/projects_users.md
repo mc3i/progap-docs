@@ -69,3 +69,60 @@ Query variables
 ```
 
 [Template Postman](https://www.postman.com/sently1234/workspace/progap/request/3741050-d943d8c7-feac-45e3-8979-566f5da85757?action=share&creator=3741050&ctx=documentation)
+
+---
+
+## Requête : Toutes les affaires et devis pour tous les utilisateurs
+
+Cette requête permet d'obtenir la liste complète des projets et devis accessibles pour tous les utilisateurs, sans filtrage par identifiant.
+
+### Requête GraphQL
+
+```graphql
+query GetUserBusinessItems {
+  affaires: mdb_privilege_project_user {
+    user_id
+    project_id
+    role_id
+    user {
+      firstname
+      lastname
+      mail
+    }
+    project {
+      code
+      name
+      workspace {
+        name
+      }
+    }
+  }
+  devis: mdb_privilege_estimate_user {
+    user_id
+    estimate_id
+    role_id
+    user {
+      firstname
+      lastname
+      mail
+    }
+    estimate {
+      code
+      name
+      project {
+        code
+        name
+      }
+    }
+  }
+}
+```
+
+### Exemple de regroupement côté client (JavaScript / Lodash)
+
+```js
+let x = {
+  affaires: _.groupBy(temp1.affaires, "user_id"),
+  devis: _.groupBy(temp1.devis, "user_id"),
+};
+```
