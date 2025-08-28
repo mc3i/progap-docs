@@ -67,3 +67,5 @@ Query variables
   "user_ids": ["ce2445a1-7262-444d-b368-201e54dad87c"]
 }
 ```
+
+[Template Postman](https://www.postman.com/sently1234/workspace/progap/request/3741050-d943d8c7-feac-45e3-8979-566f5da85757?action=share&creator=3741050&ctx=documentation)
