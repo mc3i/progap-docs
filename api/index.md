@@ -10,4 +10,4 @@
 
 ## Example de requêtes
 
-- [Exemple pratique : Utilisateurs / Affaires](examples/project_users.html)
+- [Exemple pratique : Utilisateurs / Affaires](examples/projects_users.html)
